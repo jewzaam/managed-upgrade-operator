@@ -213,6 +213,11 @@ func inferUpgradeChannelFromChannelGroup(channelGroup string, toVersion string) 
 		return nil, fmt.Errorf("invalid semantic TO version: %v", toVersion)
 	}
 
+	// minor is assumed to be a positive number, so % works like modulus and returns integer 0 or 1
+	if toSV.Minor%2 == 0 && channelGroup == "stable" {
+		channelGroup = "eus"
+	}
+
 	channel := fmt.Sprintf("%v-%v.%v", channelGroup, toSV.Major, toSV.Minor)
 	return &channel, nil
 }
